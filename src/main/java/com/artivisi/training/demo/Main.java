@@ -6,7 +6,8 @@ package com.artivisi.training.demo;
 
 import com.artivisi.training.dao.ProdukDao;
 import com.artivisi.training.domain.Produk;
-import org.postgresql.ds.PGSimpleDataSource;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
  *
@@ -14,14 +15,11 @@ import org.postgresql.ds.PGSimpleDataSource;
  */
 public class Main {
     public static void main(String[] args) throws Exception {
-        PGSimpleDataSource ds = new PGSimpleDataSource();
-        ds.setServerName("localhost");
-        ds.setDatabaseName("belajar");
-        ds.setUser("belajar");
-        ds.setPassword("java");
+        ApplicationContext ctx 
+                = new ClassPathXmlApplicationContext("konfig-spring.xml");
         
-        ProdukDao pd = new ProdukDao();
-        pd.setDataSource(ds); // inject melalui setter
+        //ProdukDao pd = ctx.getBean("pd"); // cari object by id
+        ProdukDao pd = ctx.getBean(ProdukDao.class); // cari object by tipe class
         
         Produk p = new Produk();
         p.setKode("P-001");
