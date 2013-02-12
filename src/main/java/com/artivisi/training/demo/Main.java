@@ -20,7 +20,8 @@ public class Main {
         ds.setUser("belajar");
         ds.setPassword("java");
         
-        ProdukDao pd = new ProdukDao(ds);
+        ProdukDao pd = new ProdukDao();
+        pd.setDataSource(ds); // inject melalui setter
         
         Produk p = new Produk();
         p.setKode("P-001");

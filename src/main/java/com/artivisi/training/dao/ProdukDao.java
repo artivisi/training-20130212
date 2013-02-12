@@ -16,8 +16,8 @@ import javax.sql.DataSource;
 public class ProdukDao {
     private DataSource dataSource;
     
-    public ProdukDao(DataSource ds){
-        dataSource = ds;
+    public void setDataSource(DataSource dataSource) {
+        this.dataSource = dataSource;
     }
     
     public void simpan(Produk p) throws Exception {
