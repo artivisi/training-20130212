@@ -6,6 +6,7 @@ package com.artivisi.training.demo;
 
 import com.artivisi.training.dao.ProdukDao;
 import com.artivisi.training.domain.Produk;
+import org.postgresql.ds.PGSimpleDataSource;
 
 /**
  *
@@ -13,7 +14,13 @@ import com.artivisi.training.domain.Produk;
  */
 public class Main {
     public static void main(String[] args) throws Exception {
-        ProdukDao pd = new ProdukDao();
+        PGSimpleDataSource ds = new PGSimpleDataSource();
+        ds.setServerName("localhost");
+        ds.setDatabaseName("belajar");
+        ds.setUser("belajar");
+        ds.setPassword("java");
+        
+        ProdukDao pd = new ProdukDao(ds);
         
         Produk p = new Produk();
         p.setKode("P-001");

@@ -8,7 +8,6 @@ import com.artivisi.training.domain.Produk;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import javax.sql.DataSource;
-import org.postgresql.ds.PGSimpleDataSource;
 
 /**
  *
@@ -17,12 +16,7 @@ import org.postgresql.ds.PGSimpleDataSource;
 public class ProdukDao {
     private DataSource dataSource;
     
-    public ProdukDao(){
-        PGSimpleDataSource ds = new PGSimpleDataSource();
-        ds.setServerName("localhost");
-        ds.setDatabaseName("belajar");
-        ds.setUser("belajar");
-        ds.setPassword("java");
+    public ProdukDao(DataSource ds){
         dataSource = ds;
     }
     
