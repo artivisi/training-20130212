@@ -8,17 +8,16 @@ import com.artivisi.training.domain.Produk;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import javax.sql.DataSource;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 /**
  *
  * @author endy
  */
+@Repository
 public class ProdukDao {
-    private DataSource dataSource;
-    
-    public void setDataSource(DataSource dataSource) {
-        this.dataSource = dataSource;
-    }
+    @Autowired private DataSource dataSource;
     
     public void simpan(Produk p) throws Exception {
         String sql = "insert into t_produk (kode, nama) values (?,?)";
