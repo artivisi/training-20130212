@@ -8,6 +8,7 @@ import com.artivisi.training.domain.Role;
 import com.artivisi.training.domain.User;
 import java.io.FileInputStream;
 import java.sql.Connection;
+import java.util.List;
 import javax.sql.DataSource;
 import org.dbunit.database.DatabaseConnection;
 import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
@@ -69,5 +70,42 @@ public class UserDaoTest {
         // delete record
         userDao.delete(ux);
         Assert.assertNull(userDao.cariByUsername("endy"));
+    }
+    
+    @Test
+    public void testHitungSemuaUser(){
+        Assert.assertEquals(new Long(1), userDao.hitungSemuaUser());
+    }
+    
+    @Test
+    public void testHitungUserByRole(){
+        Role admin = new Role();
+        admin.setId(1);
+        
+        Role staff = new Role();
+        staff.setId(2);
+        
+        Assert.assertEquals(new Long(1), userDao.hitungUserByRole(admin));
+        Assert.assertEquals(new Long(0), userDao.hitungUserByRole(staff));
+    }
+    
+    @Test
+    public void testCariUserByRole(){
+        Role admin = new Role();
+        admin.setId(1);
+        
+        Role staff = new Role();
+        staff.setId(2);
+        
+        List<User> hasilAdmin = userDao.cariUserByRole(admin, 0, 100);
+        Assert.assertEquals(new Integer(1), new Integer(hasilAdmin.size()));
+        
+        User u = hasilAdmin.get(0);
+        Assert.assertEquals("dadang", u.getUsername());
+        Assert.assertEquals("admin", u.getRole().getKode());
+        
+        List<User> hasilStaff = userDao.cariUserByRole(staff, 0, 100);
+        Assert.assertEquals(new Integer(0), new Integer(hasilStaff.size()));
+        
     }
 }

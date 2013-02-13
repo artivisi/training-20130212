@@ -5,6 +5,12 @@
         nama="Administrator"
     />
     
+    <t_role 
+        id="2"
+        kode="staff"
+        nama="Staff"
+    />
+    
     <t_user 
         id="1"
         username="dadang"
