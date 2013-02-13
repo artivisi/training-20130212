@@ -55,6 +55,7 @@ public class UserDao {
                 .setParameter("username", username)
                 .getSingleResult();
             u.getRole().getDaftarPermission().size();
+            u.getDaftarEmail().size();
             return u;
         } catch (NoResultException err){ // query tidak menghasilkan, gpp
             return null;

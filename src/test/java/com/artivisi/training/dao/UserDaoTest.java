@@ -9,6 +9,7 @@ import com.artivisi.training.domain.Role;
 import com.artivisi.training.domain.User;
 import java.io.FileInputStream;
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.util.List;
 import javax.sql.DataSource;
 import org.dbunit.database.DatabaseConnection;
@@ -120,5 +121,62 @@ public class UserDaoTest {
         for(Permission p : u.getRole().getDaftarPermission()){
             System.out.println("Action : "+p.getAction());
         }
+    }
+    
+    @Test
+    public void testDeleteEmail(){
+        User u = userDao.cariByUsername("dadang");
+        Assert.assertNotNull(u);
+        Assert.assertEquals(new Integer(2), new Integer(u.getDaftarEmail().size()));
+        
+        u.getDaftarEmail().remove(1); // remove email kedua
+        userDao.save(u);
+        
+        User ux = userDao.cariByUsername("dadang");
+        Assert.assertNotNull(ux);
+        Assert.assertEquals(new Integer(1), new Integer(ux.getDaftarEmail().size()));
+        
+        for(String email : ux.getDaftarEmail()){
+            System.out.println("Email : "+email);
+        }
+    }
+    
+    @Test
+    public void testAddEmail(){
+        User u = userDao.cariByUsername("dadang");
+        Assert.assertNotNull(u);
+        Assert.assertEquals(new Integer(2), new Integer(u.getDaftarEmail().size()));
+        
+        u.getDaftarEmail().add("dadang@yahoo.com"); 
+        userDao.save(u);
+        
+        User ux = userDao.cariByUsername("dadang");
+        Assert.assertNotNull(ux);
+        Assert.assertEquals(new Integer(3), new Integer(ux.getDaftarEmail().size()));
+        
+        for(String email : ux.getDaftarEmail()){
+            System.out.println("Email : "+email);
+        }
+    }
+    
+    @Test
+    public void testDeleteUser() throws Exception {
+        User u = userDao.cariByUsername("dadang");
+        Assert.assertNotNull(u);
+        userDao.delete(u);
+        
+        User ux = userDao.cariByUsername("dadang");
+        Assert.assertNull(ux);
+        
+        String sqlEmail = "select count(*) from t_user_email";
+        Connection conn = dataSource.getConnection();
+        
+        ResultSet rs = conn.createStatement().executeQuery(sqlEmail);
+        Assert.assertTrue(rs.next());
+        Long hasil = rs.getLong(1);
+        
+        Assert.assertEquals(new Long(0), hasil);
+        
+        conn.close();
     }
 }

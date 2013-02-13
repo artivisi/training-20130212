@@ -82,6 +82,22 @@ public class User {
     public void setRole(Role role) {
         this.role = role;
     }
+
+    public List<String> getDaftarEmail() {
+        return daftarEmail;
+    }
+
+    public void setDaftarEmail(List<String> daftarEmail) {
+        this.daftarEmail = daftarEmail;
+    }
+
+    public List<Phone> getDaftarTelepon() {
+        return daftarTelepon;
+    }
+
+    public void setDaftarTelepon(List<Phone> daftarTelepon) {
+        this.daftarTelepon = daftarTelepon;
+    }
     
     
 }
