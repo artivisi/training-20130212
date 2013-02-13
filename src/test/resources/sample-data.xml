@@ -1,0 +1,36 @@
+<dataset>
+    <t_role 
+        id="1"
+        kode="admin"
+        nama="Administrator"
+    />
+    
+    <t_user 
+        id="1"
+        username="dadang"
+        password="111"
+        id_role="1"
+    /> 
+    
+    <t_user_email 
+        id_user="1"
+        email="dadang@artivisi.com"
+    />
+    
+    <t_user_email 
+        id_user="1"
+        email="dadang.iswan@gmail.com"
+    />
+    
+    <t_user_phone 
+        id_user="1"
+        keterangan="Rumah"
+        nomer="021-123456"
+    />
+    
+    <t_user_phone 
+        id_user="1"
+        keterangan="Mobile"
+        nomer="081234567890"
+    />
+</dataset>
