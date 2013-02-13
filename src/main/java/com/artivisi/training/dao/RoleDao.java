@@ -20,6 +20,10 @@ public class RoleDao {
     
     public Role cariById(Integer id){
         Role r = entityManager.find(Role.class, id);
+        
+        // supaya tidak kena LazyInitializationException
+        r.getDaftarUser().size();
+        
         return r;
     }
 }

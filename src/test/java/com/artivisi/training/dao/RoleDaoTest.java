@@ -6,6 +6,7 @@ package com.artivisi.training.dao;
 
 import com.artivisi.training.domain.Permission;
 import com.artivisi.training.domain.Role;
+import com.artivisi.training.domain.User;
 import java.io.FileInputStream;
 import java.sql.Connection;
 import javax.sql.DataSource;
@@ -50,6 +51,11 @@ public class RoleDaoTest {
         // daftar permission
         for(Permission p : r.getDaftarPermission()){
             System.out.println("Action : "+p.getAction());
+        }
+        
+        // daftar user
+        for(User u : r.getDaftarUser()){
+            System.out.println("Username : "+u.getUsername());
         }
     }
 }
