@@ -50,10 +50,12 @@ public class UserDao {
     
     public User cariByUsername(String username){
         try {
-            return (User) entityManager
+            User u = (User) entityManager
                 .createQuery("select u from User u where u.username = :username")
                 .setParameter("username", username)
                 .getSingleResult();
+            u.getRole().getDaftarPermission().size();
+            return u;
         } catch (NoResultException err){ // query tidak menghasilkan, gpp
             return null;
         }

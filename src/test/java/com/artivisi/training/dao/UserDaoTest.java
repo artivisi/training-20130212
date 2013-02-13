@@ -4,6 +4,7 @@
  */
 package com.artivisi.training.dao;
 
+import com.artivisi.training.domain.Permission;
 import com.artivisi.training.domain.Role;
 import com.artivisi.training.domain.User;
 import java.io.FileInputStream;
@@ -107,5 +108,17 @@ public class UserDaoTest {
         List<User> hasilStaff = userDao.cariUserByRole(staff, 0, 100);
         Assert.assertEquals(new Integer(0), new Integer(hasilStaff.size()));
         
+    }
+    
+    @Test
+    public void testLazyLoading(){
+        User u = userDao.cariByUsername("dadang");
+        Assert.assertNotNull(u);
+        System.out.println("Role : "+u.getRole().getNama());
+        
+        System.out.println("Daftar Permission User dadang : ");
+        for(Permission p : u.getRole().getDaftarPermission()){
+            System.out.println("Action : "+p.getAction());
+        }
     }
 }
