@@ -19,6 +19,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -33,6 +35,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 public class UserDaoTest {
     @Autowired private UserDao userDao;
     @Autowired private DataSource dataSource;
+    
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
     
     @Before
     public void resetIsiDatabase() throws Exception{
@@ -119,7 +123,7 @@ public class UserDaoTest {
         
         System.out.println("Daftar Permission User dadang : ");
         for(Permission p : u.getRole().getDaftarPermission()){
-            System.out.println("Action : "+p.getAction());
+            logger.debug("Action : "+p.getAction());
         }
     }
     
@@ -137,7 +141,7 @@ public class UserDaoTest {
         Assert.assertEquals(new Integer(1), new Integer(ux.getDaftarEmail().size()));
         
         for(String email : ux.getDaftarEmail()){
-            System.out.println("Email : "+email);
+            logger.debug("Email : "+email);
         }
     }
     
@@ -155,7 +159,7 @@ public class UserDaoTest {
         Assert.assertEquals(new Integer(3), new Integer(ux.getDaftarEmail().size()));
         
         for(String email : ux.getDaftarEmail()){
-            System.out.println("Email : "+email);
+            logger.debug("Email : "+email);
         }
     }
     
