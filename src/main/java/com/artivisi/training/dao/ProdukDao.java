@@ -5,37 +5,27 @@
 package com.artivisi.training.dao;
 
 import com.artivisi.training.domain.Produk;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import javax.sql.DataSource;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
  * @author endy
  */
 @Repository
+@Transactional
 public class ProdukDao {
-    @Autowired private DataSource dataSource;
+    @PersistenceContext 
+    private EntityManager entityManager;
     
     public void simpan(Produk p) throws Exception {
-        String sql = "insert into t_produk (kode, nama) values (?,?)";
-        Connection koneksi = dataSource.getConnection();
-        PreparedStatement ps = koneksi.prepareStatement(sql);
-        ps.setString(1, p.getKode());
-        ps.setString(2, p.getNama());
-        ps.executeUpdate();
-        koneksi.close();
+        entityManager.persist(p);
     }
     
     public void hapus(Produk p) throws Exception {
-        String sql = "delete from t_produk where id = ?";
-        Connection koneksi = dataSource.getConnection();
-        PreparedStatement ps = koneksi.prepareStatement(sql);
-        ps.setInt(1, p.getId());
-        ps.executeUpdate();
-        koneksi.close();
+        entityManager.remove(p);
     }
     
     public Produk cariById(Integer id){
