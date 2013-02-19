@@ -7,6 +7,7 @@ package com.artivisi.training.springmvc.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  *
@@ -16,9 +17,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class HaloController {
     
     @RequestMapping("/halo")
-    public ModelMap halo(){
+    public ModelMap halo(@RequestParam(required=false) String nama){
         ModelMap mm = new ModelMap();
-        mm.addAttribute("nama", "Endy");
+        
+        if(nama == null){
+            nama = "undefined";
+        }
+        
+        mm.addAttribute("nama", nama);
         return mm;
     }
 }
