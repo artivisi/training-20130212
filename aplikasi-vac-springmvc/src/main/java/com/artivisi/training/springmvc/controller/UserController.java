@@ -4,15 +4,16 @@
  */
 package com.artivisi.training.springmvc.controller;
 
-import com.artivisi.training.dao.RoleDao;
 import com.artivisi.training.dao.UserDao;
-import com.artivisi.training.domain.Role;
 import com.artivisi.training.domain.User;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 /**
@@ -43,5 +44,24 @@ public class UserController {
         ModelMap mm = new ModelMap();
         mm.addAttribute("dataUser", hasilQuery);
         return mm;
+    }
+    
+    @RequestMapping(value="/master/user/form", method= RequestMethod.GET)
+    public ModelMap tampilkanForm(@RequestParam(required=false) Integer id){
+        
+        User u = userDao.cariById(id);
+        if(u == null){
+            u = new User();
+        }
+        
+        ModelMap mm = new ModelMap();
+        mm.addAttribute("user", u);
+        return mm;
+    }
+    
+    @RequestMapping(value="/master/user/form", method= RequestMethod.POST)
+    public String prosesForm(@ModelAttribute User u, BindingResult errors){
+        userDao.save(u);
+        return "redirect:list";
     }
 }

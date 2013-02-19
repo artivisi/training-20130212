@@ -77,4 +77,11 @@ public class UserDao {
                 .setParameter("roleId", role.getId())
                 .getSingleResult();
     }
+
+    public User cariById(Integer id) {
+        if(id == null){
+            return null;
+        }
+        return entityManager.find(User.class, id);
+    }
 }
