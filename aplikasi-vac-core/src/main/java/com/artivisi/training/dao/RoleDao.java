@@ -5,6 +5,7 @@
 package com.artivisi.training.dao;
 
 import com.artivisi.training.domain.Role;
+import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import org.springframework.stereotype.Repository;
@@ -25,5 +26,10 @@ public class RoleDao {
         r.getDaftarUser().size();
         
         return r;
+    }
+
+    public List<Role> cariSemuaRole() {
+        return entityManager.createQuery("select r from Role r order by r.nama")
+                .getResultList();
     }
 }

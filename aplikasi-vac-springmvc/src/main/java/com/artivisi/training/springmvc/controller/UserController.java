@@ -4,7 +4,9 @@
  */
 package com.artivisi.training.springmvc.controller;
 
+import com.artivisi.training.dao.RoleDao;
 import com.artivisi.training.dao.UserDao;
+import com.artivisi.training.domain.Role;
 import com.artivisi.training.domain.User;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class UserController {
     
     @Autowired private UserDao userDao;
+    @Autowired private RoleDao roleDao;
     
     @RequestMapping("/master/user/list")
     public ModelMap daftarUser(@RequestParam(required=false)Integer start, 
@@ -44,6 +47,11 @@ public class UserController {
         ModelMap mm = new ModelMap();
         mm.addAttribute("dataUser", hasilQuery);
         return mm;
+    }
+    
+    @ModelAttribute("daftarRole")
+    public List<Role> daftarRole(){
+        return roleDao.cariSemuaRole();
     }
     
     @RequestMapping(value="/master/user/form", method= RequestMethod.GET)

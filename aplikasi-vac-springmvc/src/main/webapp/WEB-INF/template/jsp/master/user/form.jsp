@@ -43,7 +43,9 @@
                     <tr>
                         <td>Role</td>
                         <td>
-                            <spring:input path="role.id" />
+                            <spring:select path="role.id" >
+                                <spring:options items="${daftarRole}" itemValue="id" itemLabel="nama"/>
+                            </spring:select>
                         </td>
                         <td>
                             <font color="red">
