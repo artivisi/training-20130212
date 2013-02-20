@@ -55,6 +55,10 @@ public class UserController {
     }
     
     public String delete(){
+        currentUser = listDataModelUser.getRowData();
+        userDao.delete(currentUser);
+        resetCurrentUser();
+        refreshDataUser();
         return "list?faces-redirect=true";
     }
     
