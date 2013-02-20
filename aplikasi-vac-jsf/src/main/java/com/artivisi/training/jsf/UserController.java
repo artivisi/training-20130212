@@ -4,7 +4,9 @@
  */
 package com.artivisi.training.jsf;
 
+import com.artivisi.training.dao.RoleDao;
 import com.artivisi.training.dao.UserDao;
+import com.artivisi.training.domain.Role;
 import com.artivisi.training.domain.User;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -22,8 +24,10 @@ import org.springframework.stereotype.Controller;
 public class UserController {
     
     @Autowired private UserDao userDao;
+    @Autowired private RoleDao roleDao;
     
     private List<User> daftarUser;
+    private List<Role> daftarRole;
     private User currentUser;
     private ListDataModel<User> listDataModelUser;
     
@@ -31,10 +35,17 @@ public class UserController {
     public void refreshDataUser(){
         daftarUser = userDao.cariSemuaUser(0, userDao.hitungSemuaUser().intValue());
         listDataModelUser = new ListDataModel<User>(daftarUser);
+        daftarRole = roleDao.cariSemuaRole();
+    }
+    
+    private void resetCurrentUser(){
+        currentUser = new User();
+        Role r = new Role();
+        currentUser.setRole(r);
     }
     
     public String tambah(){
-        currentUser = new User();
+        resetCurrentUser();
         return "form?faces-redirect=true";
     }
     
@@ -48,7 +59,9 @@ public class UserController {
     }
     
     public String simpan(){
-        System.out.println("Simpan");
+        userDao.save(currentUser);
+        resetCurrentUser();
+        refreshDataUser();
         return "list?faces-redirect=true";
     }
     
@@ -64,6 +77,10 @@ public class UserController {
 
     public User getCurrentUser() {
         return currentUser;
+    }
+
+    public List<Role> getDaftarRole() {
+        return daftarRole;
     }
     
     

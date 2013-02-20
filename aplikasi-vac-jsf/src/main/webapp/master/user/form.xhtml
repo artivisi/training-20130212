@@ -17,7 +17,7 @@
                 <p:inputText id="username"   
                              value="#{userController.currentUser.username}" 
                              required="true" label="Username">  
-                    <f:validateLength minimum="2" />  
+                    <f:validateLength minimum="4" />  
                 </p:inputText>  
                 <p:message for="username" />  
                 
@@ -27,7 +27,15 @@
                              required="true" label="Password">  
                     <f:validateLength minimum="4" maximum="255"/>  
                 </p:password>  
-                <p:message for="password" />  
+                <p:message for="password" /> 
+                
+                <h:outputLabel for="role" value="Role: " />
+                <h:selectOneMenu id="role" value="#{userController.currentUser.role.id}">
+   			<f:selectItems value="#{userController.daftarRole}" var="r"
+   			itemLabel="#{r.nama}" itemValue="#{r.id}" />
+   		</h:selectOneMenu>
+                <p:message for="role" />  
+                
             </h:panelGrid>
             <p:commandButton value="Simpan" action="#{userController.simpan}"></p:commandButton>  
         </h:form>
