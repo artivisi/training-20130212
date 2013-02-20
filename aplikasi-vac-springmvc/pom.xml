@@ -46,6 +46,13 @@
             <version>2.5</version>
             <scope>provided</scope> <!-- tidak diinclude di hasil akhir -->
         </dependency>
+        
+        <dependency>
+            <groupId>opensymphony</groupId>
+            <artifactId>sitemesh</artifactId>
+            <version>2.4.2</version>
+            <scope>runtime</scope>
+        </dependency>
       
         <dependency>
             <groupId>junit</groupId>
