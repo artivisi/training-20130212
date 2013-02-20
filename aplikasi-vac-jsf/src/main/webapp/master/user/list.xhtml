@@ -11,8 +11,10 @@
         <h1>Daftar User</h1>
 
         <h:form>
+            
+            <p:commandButton value="Tambah User Baru" action="#{userController.tambah}"/>
 
-            <p:dataTable var="u" value="#{userController.daftarUser}"   
+            <p:dataTable var="u" value="#{userController.listDataModelUser}"   
                          paginator="true" rows="10"  
                          paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
                          rowsPerPageTemplate="10,15,20">
