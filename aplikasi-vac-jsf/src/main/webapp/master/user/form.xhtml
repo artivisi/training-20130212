@@ -10,7 +10,7 @@
     <h:body>
         <h1>Edit User</h1>
 
-        <h:form>
+        <h:form id="formUser">
 
             <h:panelGrid columns="3">
                 <h:outputLabel for="username" value="Username: *" />
@@ -37,7 +37,7 @@
                 <p:message for="role" />  
                 
             </h:panelGrid>
-            <p:commandButton value="Simpan" action="#{userController.simpan}"></p:commandButton>  
+            <p:commandButton value="Simpan" action="#{userController.simpan}" update="formUser"></p:commandButton>  
         </h:form>
 
     </h:body>
