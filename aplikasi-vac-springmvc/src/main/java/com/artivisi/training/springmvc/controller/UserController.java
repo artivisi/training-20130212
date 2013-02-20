@@ -9,6 +9,7 @@ import com.artivisi.training.dao.UserDao;
 import com.artivisi.training.domain.Role;
 import com.artivisi.training.domain.User;
 import java.util.List;
+import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.support.SessionStatus;
 
 /**
  *
@@ -68,8 +70,12 @@ public class UserController {
     }
     
     @RequestMapping(value="/master/user/form", method= RequestMethod.POST)
-    public String prosesForm(@ModelAttribute User u, BindingResult errors){
+    public String prosesForm(@ModelAttribute @Valid User u, BindingResult errors, SessionStatus status){
+        if(errors.hasErrors()){
+            return "/master/user/form";
+        }
         userDao.save(u);
+        status.setComplete();
         return "redirect:list";
     }
 }

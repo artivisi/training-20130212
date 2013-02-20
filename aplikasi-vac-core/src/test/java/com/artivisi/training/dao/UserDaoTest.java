@@ -57,7 +57,7 @@ public class UserDaoTest {
         
         User u = new User();
         u.setUsername("endy");
-        u.setPassword("123");
+        u.setPassword("12345678");
         u.setRole(r);
         
         Assert.assertNull(u.getId()); // sebelum disave, id null
@@ -65,12 +65,12 @@ public class UserDaoTest {
         Assert.assertNotNull(u.getId()); // setelah disave, id terisi
         
         // update record
-        u.setPassword("456");
+        u.setPassword("45678321");
         userDao.save(u);
         
         User ux = userDao.cariByUsername("endy");
         Assert.assertNotNull(ux);
-        Assert.assertEquals("456", ux.getPassword());
+        Assert.assertEquals("45678321", ux.getPassword());
         
         
         // delete record

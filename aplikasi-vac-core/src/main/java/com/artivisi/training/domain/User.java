@@ -15,6 +15,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import org.hibernate.validator.constraints.NotEmpty;
 
 /**
  *
@@ -26,8 +29,17 @@ public class User {
     @Id
     @GeneratedValue
     private Integer id;
+    
+    @NotNull
+    @NotEmpty
+    @Size(min=4, max=20)
     @Column(nullable=false, unique=true)
     private String username;
+    
+    @NotNull
+    @NotEmpty
+    @Size(min=8, max=255)
+    @Column(nullable=false)
     private String password;
     
     @ElementCollection
