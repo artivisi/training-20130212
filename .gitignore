@@ -24,3 +24,6 @@ build
 dist
 private
 nb-configuration.xml
+
+# JSF Ignore
+faces-config.NavData
