@@ -50,4 +50,14 @@
     
     <tx:annotation-driven />
     
+    <!-- loading label, pesan error, dsb dari text file -->
+    <bean id="messageSource"
+      class="org.springframework.context.support.ResourceBundleMessageSource">
+        <property name="basenames">
+            <list>
+                <value>messages</value>
+            </list>
+        </property>
+    </bean>
+    
 </beans>
