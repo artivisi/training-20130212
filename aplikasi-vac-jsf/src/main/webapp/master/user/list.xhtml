@@ -1,0 +1,45 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Daftar User</title>
+    </h:head>
+    <h:body>
+        <h1>Daftar User</h1>
+
+        <h:form>
+
+            <p:dataTable var="u" value="#{userController.daftarUser}"   
+                         paginator="true" rows="10"  
+                         paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                         rowsPerPageTemplate="10,15,20">
+                <p:column>
+                    <f:facet name="header">
+                        Username
+                    </f:facet>
+                    <h:outputText value="#{u.username}" />
+                </p:column>
+
+                <p:column>
+                    <f:facet name="header">
+                        Role
+                    </f:facet>
+                    <h:outputText value="#{u.role.nama}" />
+                </p:column>
+
+                <p:column>
+                    <h:commandButton value="edit" action="#{userController.edit}" />
+                </p:column>
+                <p:column>
+                    <h:commandButton value="delete" action="#{userController.delete}" />
+                </p:column>
+
+            </p:dataTable>
+        </h:form>
+
+    </h:body>
+</html>
+
