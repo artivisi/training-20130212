@@ -30,10 +30,10 @@
                 <p:message for="password" /> 
                 
                 <h:outputLabel for="role" value="Role: " />
-                <h:selectOneMenu id="role" value="#{userController.currentUser.role.id}">
+                <p:selectOneMenu id="role" value="#{userController.currentUser.role.id}">
    			<f:selectItems value="#{userController.daftarRole}" var="r"
    			itemLabel="#{r.nama}" itemValue="#{r.id}" />
-   		</h:selectOneMenu>
+   		</p:selectOneMenu>
                 <p:message for="role" />  
                 
             </h:panelGrid>
