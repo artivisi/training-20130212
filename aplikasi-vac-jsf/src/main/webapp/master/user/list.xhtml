@@ -3,11 +3,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:p="http://primefaces.org/ui">
     <h:head>
         <title>Daftar User</title>
     </h:head>
     <h:body>
+        <ui:composition template="../../template/utama.xhtml">
+            <ui:define name="content">
         <h1>Daftar User</h1>
 
         <h:form>
@@ -41,6 +44,8 @@
 
             </p:dataTable>
         </h:form>
+        </ui:define>
+        </ui:composition>
 
     </h:body>
 </html>
