@@ -33,6 +33,10 @@ public class VacRestClient {
         return restTemplate.getForObject(serverUrl+"/"+id, Role.class);
     }
     
+    public void hapus(Role r){
+        restTemplate.delete(serverUrl+"/"+r.getId());
+    }
+    
     public Role simpan(Role r){
         if(r.getId() == null){
             URI location = restTemplate.postForLocation(serverUrl, r);

@@ -50,4 +50,11 @@ public class VacRestClientTest {
         Role hasil = client.simpan(r);
         System.out.println("ID yang diedit : "+hasil.getId());
     }
+    
+    @Test
+    public void testHapus(){
+        Role r = new Role();
+        r.setId(9);
+        client.hapus(r);
+    }
 }
