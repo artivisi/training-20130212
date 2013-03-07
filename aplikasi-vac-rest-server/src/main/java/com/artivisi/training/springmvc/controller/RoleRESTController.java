@@ -30,9 +30,11 @@ import org.springframework.web.bind.annotation.ResponseStatus;
  */
 @Controller
 public class RoleRESTController {
+    private static final String URL_ALL_ROLE = "/role";
+    private static final String URL_ROLE_BY_ID = "/role/{id}";
     @Autowired private RoleDao roleDao;
     
-    @RequestMapping(value = "/role", method = RequestMethod.GET)
+    @RequestMapping(value = URL_ALL_ROLE, method = RequestMethod.GET)
     @ResponseBody
     public List<Role> semuaRole(){
         List<Role> hasil = roleDao.cariSemuaRole();
@@ -43,7 +45,7 @@ public class RoleRESTController {
         return hasil;
     }
     
-    @RequestMapping(value = "/role/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = URL_ROLE_BY_ID, method = RequestMethod.GET)
     @ResponseBody
     public Role cariRoleById(@PathVariable Integer id){
         Role r = roleDao.cariById(id);
@@ -56,13 +58,13 @@ public class RoleRESTController {
     }
     
     
-    @RequestMapping(value = "/role", method = RequestMethod.POST)
+    @RequestMapping(value = URL_ALL_ROLE, method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     public void simpan(@RequestBody @Valid Role r){
         roleDao.save(r);
     }
     
-    @RequestMapping(value = "/role/{id}", method = RequestMethod.PUT)
+    @RequestMapping(value = URL_ROLE_BY_ID, method = RequestMethod.PUT)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void update(@PathVariable Integer id, @RequestBody @Valid Role r){
         Role rx = roleDao.cariById(id);
