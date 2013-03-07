@@ -18,6 +18,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -40,6 +41,7 @@ public class Role {
     private String nama;
     
     @XmlElementWrapper(name = "daftarPermission")
+    @XmlElement(name = "permission")
     @ManyToMany(fetch= FetchType.EAGER)
     @JoinTable(
             name="t_role_permission",
@@ -50,6 +52,7 @@ public class Role {
             = new ArrayList<Permission>();
     
     @XmlElementWrapper(name = "daftarUser")
+    @XmlElement(name = "user")
     @OneToMany(mappedBy="role")
     private List<User> daftarUser 
             = new ArrayList<User>();
