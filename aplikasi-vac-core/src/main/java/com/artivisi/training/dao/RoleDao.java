@@ -24,6 +24,7 @@ public class RoleDao {
         
         // supaya tidak kena LazyInitializationException
         r.getDaftarUser().size();
+        r.getDaftarPermission().size();
         
         return r;
     }

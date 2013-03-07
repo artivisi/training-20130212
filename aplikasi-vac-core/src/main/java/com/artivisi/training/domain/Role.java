@@ -16,11 +16,17 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
  * @author endy
  */
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
 @Entity
 @Table(name="t_role")
 public class Role {
@@ -33,6 +39,7 @@ public class Role {
     private String kode;
     private String nama;
     
+    @XmlElementWrapper(name = "daftarPermission")
     @ManyToMany(fetch= FetchType.EAGER)
     @JoinTable(
             name="t_role_permission",
@@ -42,6 +49,7 @@ public class Role {
     private List<Permission> daftarPermission 
             = new ArrayList<Permission>();
     
+    @XmlElementWrapper(name = "daftarUser")
     @OneToMany(mappedBy="role")
     private List<User> daftarUser 
             = new ArrayList<User>();
