@@ -9,6 +9,8 @@
     
     <http auto-config="true">
         <intercept-url pattern="/spring/master/user/list" access="ROLE_USER" />
+        <form-login login-page="/login.html"/>
+        <logout logout-success-url="/login.html" />
     </http>
 
     
