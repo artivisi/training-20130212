@@ -33,4 +33,12 @@ public class RoleDao {
         return entityManager.createQuery("select r from Role r order by r.nama")
                 .getResultList();
     }
+
+    public void save(Role r) {
+        if(r.getId() == null){
+            entityManager.persist(r);
+        } else {
+            entityManager.merge(r);
+        }
+    }
 }

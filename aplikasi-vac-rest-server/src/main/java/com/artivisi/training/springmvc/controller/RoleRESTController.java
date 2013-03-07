@@ -12,12 +12,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 /**
  *
@@ -50,6 +55,23 @@ public class RoleRESTController {
         return r;
     }
     
+    
+    @RequestMapping(value = "/role", method = RequestMethod.POST)
+    @ResponseStatus(HttpStatus.CREATED)
+    public void simpan(@RequestBody @Valid Role r){
+        roleDao.save(r);
+    }
+    
+    @RequestMapping(value = "/role/{id}", method = RequestMethod.PUT)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void update(@PathVariable Integer id, @RequestBody @Valid Role r){
+        Role rx = roleDao.cariById(id);
+        if(rx == null){
+            throw new ObjectTidakDitemukanException("Role dengan id "+id+" tidak ditemukan");
+        }
+        roleDao.save(r);
+    }
+    
     @RequestMapping(value = "/info", method = RequestMethod.GET)
     @ResponseBody
     public Map<String, String> informasiAplikasi(HttpServletRequest req){
@@ -59,4 +81,8 @@ public class RoleRESTController {
         hasil.put("ip", req.getRemoteAddr());
         return hasil;
     }
+    
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(ObjectTidakDitemukanException.class)
+    public void handleObjectTidakDitemukanException(){}
 }
