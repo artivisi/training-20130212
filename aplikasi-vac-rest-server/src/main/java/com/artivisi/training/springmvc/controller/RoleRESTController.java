@@ -7,15 +7,15 @@ package com.artivisi.training.springmvc.controller;
 import com.artivisi.training.dao.RoleDao;
 import com.artivisi.training.domain.Role;
 import com.artivisi.training.domain.User;
+import java.net.URI;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,8 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriTemplate;
 
 /**
  *
@@ -63,21 +62,11 @@ public class RoleRESTController {
     
     
     @RequestMapping(value = URL_ALL_ROLE, method = RequestMethod.POST)
-    public ResponseEntity<Void> simpan(@RequestBody @Valid Role r, HttpServletRequest request){
+    public void simpan(@RequestBody @Valid Role r, HttpServletRequest request, HttpServletResponse response){
         roleDao.save(r);
-
-        UriComponents ucb =
-        ServletUriComponentsBuilder.fromContextPath(request)
-                .path("/rest"+URL_ROLE_BY_ID)
-                .buildAndExpand(r.getId());
-        
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Location", ucb.encode().toUriString());
-        
-        
-        
-        ResponseEntity<Void> hasil = new ResponseEntity<Void>(null, headers, HttpStatus.CREATED);
-        return hasil;
+        String requestUrl = request.getRequestURL().toString();
+        URI uri = new UriTemplate("{requestUrl}/{id}").expand(requestUrl, r.getId());
+        response.setHeader("Location", uri.toASCIIString());
     }
     
     @RequestMapping(value = URL_ROLE_BY_ID, method = RequestMethod.PUT)
