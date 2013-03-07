@@ -5,6 +5,7 @@
 package com.artivisi.training.rest.client;
 
 import com.artivisi.training.rest.domain.Role;
+import java.net.URI;
 import java.util.List;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
@@ -30,5 +31,15 @@ public class VacRestClient {
     
     public Role cariRoleById(Integer id){
         return restTemplate.getForObject(serverUrl+"/"+id, Role.class);
+    }
+    
+    public Role simpan(Role r){
+        if(r.getId() == null){
+            URI location = restTemplate.postForLocation(serverUrl, r);
+            return restTemplate.getForObject(location, Role.class);
+        } else {
+            restTemplate.put(serverUrl+"/"+r.getId(), r);
+            return r;
+        }
     }
 }

@@ -33,4 +33,21 @@ public class VacRestClientTest {
         System.out.println("Nama : "+r.getNama());
         assertEquals("admin", r.getKode());
     }
+    
+    @Test
+    public void testSimpanBaru(){
+        Role r = new Role();
+        r.setKode("tester");
+        r.setNama("Tester");
+        Role hasil = client.simpan(r);
+        System.out.println("ID yang baru : "+hasil.getId());
+    }
+    
+    @Test
+    public void testUpdateExisting(){
+        Role r = client.cariRoleById(1);
+        r.setNama("Administrator setelah update");
+        Role hasil = client.simpan(r);
+        System.out.println("ID yang diedit : "+hasil.getId());
+    }
 }
