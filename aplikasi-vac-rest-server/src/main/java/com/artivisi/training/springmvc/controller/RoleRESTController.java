@@ -79,6 +79,16 @@ public class RoleRESTController {
         roleDao.save(r);
     }
     
+    @RequestMapping(value = URL_ROLE_BY_ID, method = RequestMethod.DELETE)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void hapus(@PathVariable Integer id){
+        Role r = roleDao.cariById(id);
+        if(r == null){
+            throw new ObjectTidakDitemukanException("Role dengan id "+id+" tidak ditemukan");
+        }
+        roleDao.hapus(r);
+    }
+    
     @RequestMapping(value = "/info", method = RequestMethod.GET)
     @ResponseBody
     public Map<String, String> informasiAplikasi(HttpServletRequest req){

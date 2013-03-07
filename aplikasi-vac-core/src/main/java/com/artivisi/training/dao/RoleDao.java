@@ -41,4 +41,8 @@ public class RoleDao {
             entityManager.merge(r);
         }
     }
+
+    public void hapus(Role r) {
+        entityManager.remove(entityManager.find(Role.class, r.getId()));
+    }
 }
