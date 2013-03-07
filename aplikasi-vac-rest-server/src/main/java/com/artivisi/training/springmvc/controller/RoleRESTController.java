@@ -17,11 +17,13 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.util.UriTemplate;
@@ -39,8 +41,15 @@ public class RoleRESTController {
     
     @RequestMapping(value = URL_ALL_ROLE, method = RequestMethod.GET)
     @ResponseBody
-    public List<Role> semuaRole(){
-        List<Role> hasil = roleDao.cariSemuaRole();
+    public List<Role> semuaRole(@RequestParam(required=false) String nama){
+        List<Role> hasil ;
+        
+        if(StringUtils.hasText(nama)) {
+            hasil = roleDao.cariRoleByNama(nama);
+        } else {
+            hasil = roleDao.cariSemuaRole();
+        }
+        
         for (Role role : hasil) {
             role.setDaftarPermission(null);
             role.setDaftarUser(null);

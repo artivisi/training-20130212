@@ -45,4 +45,10 @@ public class RoleDao {
     public void hapus(Role r) {
         entityManager.remove(entityManager.find(Role.class, r.getId()));
     }
+
+    public List<Role> cariRoleByNama(String nama) {
+        return entityManager.createQuery("select r from Role r where r.nama like :nama order by r.nama")
+                .setParameter("nama", "%"+nama+"%")
+                .getResultList();
+    }
 }
