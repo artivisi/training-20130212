@@ -21,7 +21,7 @@ public class Penerima {
         ServerSocket server = new ServerSocket(port);
         System.out.println("Server ready di port "+port);
         Socket s = server.accept();
-        
+        System.out.println("Ada client connect dari ip "+s.getRemoteSocketAddress().toString());
         InputStream input = s.getInputStream();
         byte[] byteRequestLength = new byte[4];
         input.read(byteRequestLength);
