@@ -7,13 +7,16 @@ package com.artivisi.training.jpos;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import org.joda.time.DateTime;
+import org.jpos.iso.ISOException;
+import org.jpos.iso.ISOMUX;
 import org.jpos.iso.ISOMsg;
+import org.jpos.iso.ISORequest;
 
 /**
  *
  * @author endy
  */
-public class Pengirim {
+public class PengirimConnectionOriented {
     public static void main(String[] args) throws Exception {
         ISOMsg msg = new ISOMsg();
         msg.setMTI("0200");
@@ -42,12 +45,28 @@ public class Pengirim {
         
         String server = "localhost";
         Integer port = 20000;
-        GspChannel channel = new GspChannel(server, port, new ArtivisiPackager());
         
-        channel.connect();
-        channel.send(msg);
-        ISOMsg reply = channel.receive();
-        channel.disconnect();
+        ISOMUX mux = new ISOMUX(new GspChannel(server, port, new ArtivisiPackager())){
+
+            @Override
+            protected String getKey(ISOMsg m) throws ISOException {
+                if(m.getString(11) != null){
+                    return m.getString(11) + m.getString(41);
+                }
+                return m.getString(12) + m.getString(41);
+            }
+            
+        };
+        new Thread(mux).start();
+        
+        ISORequest request = new ISORequest(msg);
+        mux.queue(request);
+        
+        ISOMsg reply = request.getResponse(10 * 1000);
+        if(reply == null){
+            System.out.println("Tidak dapat reply sampai timeout");
+        }
+        
         System.out.println("Reply : "+new String(reply.pack()));
     }
 }

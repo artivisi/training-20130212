@@ -10,7 +10,6 @@ import org.jpos.iso.ISOMsg;
 import org.jpos.iso.ISORequestListener;
 import org.jpos.iso.ISOServer;
 import org.jpos.iso.ISOSource;
-import org.jpos.iso.channel.ASCIIChannel;
 
 /**
  *
@@ -20,7 +19,7 @@ public class Penerima {
     public static void main(String[] args) throws Exception {
         Integer port = 20000;
         
-        ISOServer server = new ISOServer(port, new ASCIIChannel(new ArtivisiPackager()), null);
+        ISOServer server = new ISOServer(port, new GspChannel(new ArtivisiPackager()), null);
         server.addISORequestListener(new ISORequestListener() {
 
             public boolean process(ISOSource pengirim, ISOMsg request) {
