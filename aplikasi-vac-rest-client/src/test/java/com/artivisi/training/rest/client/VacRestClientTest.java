@@ -17,7 +17,7 @@ public class VacRestClientTest {
     
     private VacRestClient client = new VacRestClient();
     
-    @Test
+//    @Test
     public void testSemuaRole() {
         List<Role> hasil = client.semuaRole();
         System.out.println("Jumlah record : "+hasil.size());
@@ -26,15 +26,15 @@ public class VacRestClientTest {
         }
     }
     
-    @Test
+//    @Test
     public void testCariRoleById(){
         Role r = client.cariRoleById(1);
         System.out.println("Kode : "+r.getKode());
         System.out.println("Nama : "+r.getNama());
-        assertEquals("admin", r.getKode());
+        assertEquals("ADM", r.getKode());
     }
     
-    @Test
+//    @Test
     public void testSimpanBaru(){
         Role r = new Role();
         r.setKode("tester");
@@ -43,7 +43,7 @@ public class VacRestClientTest {
         System.out.println("ID yang baru : "+hasil.getId());
     }
     
-    @Test
+//    @Test
     public void testUpdateExisting(){
         Role r = client.cariRoleById(1);
         r.setNama("Administrator setelah update");
@@ -54,7 +54,7 @@ public class VacRestClientTest {
     @Test
     public void testHapus(){
         Role r = new Role();
-        r.setId(9);
+        r.setId(3);
         client.hapus(r);
     }
 }
