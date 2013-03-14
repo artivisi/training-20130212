@@ -7,7 +7,10 @@ package com.artivisi.training.swing.ui.master.panel;
 import com.artivisi.training.rest.domain.Role;
 import com.artivisi.training.swing.App;
 import com.artivisi.training.swing.ui.master.tablemodel.MasterRoleTableModel;
+import java.util.ArrayList;
 import java.util.List;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 /**
  *
@@ -17,6 +20,8 @@ public class MasterRolePanel extends javax.swing.JPanel {
 
     public static final String PANEL_NAME = "Master Role Panel";
     private static MasterRolePanel masterRolePanel;
+    private Role role;
+    private List<Role> listRole = new ArrayList<Role>();
 
     public static MasterRolePanel getMasterRolePanel() {
         if(masterRolePanel == null){
@@ -31,12 +36,14 @@ public class MasterRolePanel extends javax.swing.JPanel {
     public MasterRolePanel() {
         initComponents();
         loadDataToTable();
+        tableListRole.getSelectionModel()
+                .addListSelectionListener(new TableSelection());
     }
     
     private void loadDataToTable(){
-        List<Role> roles = App.getVacRestClient().semuaRole();
+        listRole = App.getVacRestClient().semuaRole();
         tableListRole.setModel(
-                new MasterRoleTableModel(roles));
+                new MasterRoleTableModel(listRole));
     }
 
     /**
@@ -215,4 +222,20 @@ public class MasterRolePanel extends javax.swing.JPanel {
     private javax.swing.JTextField txtKode;
     private javax.swing.JTextField txtNama;
     // End of variables declaration//GEN-END:variables
+
+    private class TableSelection 
+        implements ListSelectionListener{
+
+        @Override
+        public void valueChanged(ListSelectionEvent e) {
+            if(tableListRole.getSelectedRow() >= 0){
+                role = listRole.get(
+                        tableListRole.getSelectedRow());
+                txtKode.setText(role.getKode());
+                txtNama.setText(role.getNama());
+            }
+        }
+        
+    }
+    
 }
