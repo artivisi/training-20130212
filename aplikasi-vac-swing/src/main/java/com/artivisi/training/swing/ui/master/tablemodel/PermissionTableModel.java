@@ -18,9 +18,11 @@ public class PermissionTableModel
     
     private List<Permission> permissions = new ArrayList<Permission>();
     private String[] HEADER = {"X", "Permission"};
+    private Boolean editable = Boolean.FALSE;
 
-    public PermissionTableModel(List<Permission> permissions) {
+    public PermissionTableModel(List<Permission> permissions, Boolean editable) {
         this.permissions = permissions;
+        this.editable = editable;
     }
     
     @Override
@@ -67,7 +69,7 @@ public class PermissionTableModel
     @Override
     public boolean isCellEditable(int rowIndex, int columnIndex) {
         switch(columnIndex){
-            case 0: return true;
+            case 0: return editable;
             default: return false;
         }
     }

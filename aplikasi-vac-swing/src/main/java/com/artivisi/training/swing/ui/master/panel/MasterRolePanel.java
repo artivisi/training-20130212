@@ -54,7 +54,7 @@ public class MasterRolePanel extends javax.swing.JPanel {
         
         permission = App.getVacRestClient().semuaPermission();
         tableListPermission.setModel(
-                new PermissionTableModel(permission));
+                new PermissionTableModel(permission, Boolean.FALSE));
     }
     
     private void enableButton(
@@ -346,12 +346,13 @@ public class MasterRolePanel extends javax.swing.JPanel {
        role = null;
        
        permission = App.getVacRestClient().semuaPermission();
-       tableListPermission.setModel(new PermissionTableModel(permission));
+       tableListPermission.setModel(new PermissionTableModel(permission, Boolean.TRUE));
     }//GEN-LAST:event_btnAddActionPerformed
 
     private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
         enableButton(false, false, true, false, true);
         enableTextField(true);
+        tableListPermission.setModel(new PermissionTableModel(permission, Boolean.TRUE));
     }//GEN-LAST:event_btnEditActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -406,7 +407,7 @@ public class MasterRolePanel extends javax.swing.JPanel {
         }
         
         tableListPermission.setModel(
-                new PermissionTableModel(permission));
+                new PermissionTableModel(permission, Boolean.FALSE));
     }
     
 }
