@@ -9,6 +9,7 @@ import com.artivisi.training.swing.App;
 import com.artivisi.training.swing.ui.master.tablemodel.MasterRoleTableModel;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JOptionPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -76,8 +77,18 @@ public class MasterRolePanel extends javax.swing.JPanel {
         btnEdit.setText("Edit");
 
         btnDelete.setText("Delete");
+        btnDelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteActionPerformed(evt);
+            }
+        });
 
         btnSave.setText("Save");
+        btnSave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSaveActionPerformed(evt);
+            }
+        });
 
         jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
@@ -169,7 +180,7 @@ public class MasterRolePanel extends javax.swing.JPanel {
                         .addComponent(btnAdd)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnEdit)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btnDelete)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnSave)
@@ -204,6 +215,37 @@ public class MasterRolePanel extends javax.swing.JPanel {
         App.getMainFrame().getMainTabpane().remove(this);
         masterRolePanel = null;
     }//GEN-LAST:event_btnExitActionPerformed
+
+    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
+        if(role == null){
+            role = new Role();
+        }
+        
+        role.setKode(txtKode.getText());
+        role.setNama(txtNama.getText());
+        
+        App.getVacRestClient().simpan(role);
+        role = null;
+        loadDataToTable();
+    }//GEN-LAST:event_btnSaveActionPerformed
+
+    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
+        if(role != null){
+            int ret = JOptionPane.showConfirmDialog(
+                    this, 
+                    "Apakah anda yakin untuk menghapus role " + role.getKode(), 
+                    "Konfirmasi", JOptionPane.YES_NO_OPTION);
+            if(ret == JOptionPane.YES_OPTION){
+                App.getVacRestClient().hapus(role);
+            }
+        } else {
+            JOptionPane.showMessageDialog(
+                    this, 
+                    "Tidak ada data yang akan di hapus", "Error",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+        loadDataToTable();
+    }//GEN-LAST:event_btnDeleteActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAdd;
