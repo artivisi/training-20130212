@@ -12,6 +12,7 @@ import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import org.springframework.util.StringUtils;
 
 /**
  *
@@ -37,6 +38,7 @@ public class MasterRolePanel extends javax.swing.JPanel {
     public MasterRolePanel() {
         initComponents();
         loadDataToTable();
+        enableButton(true, false, false, false, true);
         tableListRole.getSelectionModel()
                 .addListSelectionListener(new TableSelection());
     }
@@ -46,6 +48,43 @@ public class MasterRolePanel extends javax.swing.JPanel {
         tableListRole.setModel(
                 new MasterRoleTableModel(listRole));
     }
+    
+    private void enableButton(
+            boolean add, boolean edit,
+            boolean save, boolean delete,
+            boolean exit){
+        btnAdd.setEnabled(add);
+        btnEdit.setEnabled(edit);
+        btnDelete.setEnabled(delete);
+        btnSave.setEnabled(save);
+        btnExit.setEnabled(exit);
+    }
+    
+    private void enableTextField(boolean active){
+        txtKode.setEnabled(active);
+        txtNama.setEnabled(active);
+    }
+    
+    private boolean validateForm(){
+        if(!StringUtils.hasText(txtKode.getText())){
+            JOptionPane.showMessageDialog(
+                    this, 
+                    "Kode harus diisi", "Error",
+                    JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        
+        if(!StringUtils.hasText(txtNama.getText())){
+            JOptionPane.showMessageDialog(
+                    this, 
+                    "Nama harus diisi", "Error",
+                    JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        
+        return true;
+    }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -73,10 +112,23 @@ public class MasterRolePanel extends javax.swing.JPanel {
         btnExit = new javax.swing.JButton();
 
         btnAdd.setText("Add");
+        btnAdd.setEnabled(false);
+        btnAdd.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddActionPerformed(evt);
+            }
+        });
 
         btnEdit.setText("Edit");
+        btnEdit.setEnabled(false);
+        btnEdit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditActionPerformed(evt);
+            }
+        });
 
         btnDelete.setText("Delete");
+        btnDelete.setEnabled(false);
         btnDelete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnDeleteActionPerformed(evt);
@@ -84,6 +136,7 @@ public class MasterRolePanel extends javax.swing.JPanel {
         });
 
         btnSave.setText("Save");
+        btnSave.setEnabled(false);
         btnSave.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnSaveActionPerformed(evt);
@@ -91,6 +144,10 @@ public class MasterRolePanel extends javax.swing.JPanel {
         });
 
         jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        txtNama.setEnabled(false);
+
+        txtKode.setEnabled(false);
 
         jLabel2.setText("Nama");
 
@@ -163,6 +220,7 @@ public class MasterRolePanel extends javax.swing.JPanel {
         jScrollPane1.setViewportView(tableListRole);
 
         btnExit.setText("Exit");
+        btnExit.setEnabled(false);
         btnExit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnExitActionPerformed(evt);
@@ -217,16 +275,24 @@ public class MasterRolePanel extends javax.swing.JPanel {
     }//GEN-LAST:event_btnExitActionPerformed
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
-        if(role == null){
-            role = new Role();
+        if(validateForm()){
+            if(role == null){
+                role = new Role();
+            }
+
+            role.setKode(txtKode.getText());
+            role.setNama(txtNama.getText());
+
+            App.getVacRestClient().simpan(role);
+            role = null;
+            loadDataToTable();
+
+            txtKode.setText("");
+            txtNama.setText("");
+
+            enableButton(true, false, false, false, true);
+            enableTextField(false);
         }
-        
-        role.setKode(txtKode.getText());
-        role.setNama(txtNama.getText());
-        
-        App.getVacRestClient().simpan(role);
-        role = null;
-        loadDataToTable();
     }//GEN-LAST:event_btnSaveActionPerformed
 
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
@@ -245,7 +311,21 @@ public class MasterRolePanel extends javax.swing.JPanel {
                     JOptionPane.ERROR_MESSAGE);
         }
         loadDataToTable();
+        txtKode.setText("");
+        txtNama.setText("");
+        enableButton(true, false, false, false, true);
     }//GEN-LAST:event_btnDeleteActionPerformed
+
+    private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
+       enableButton(false, false, true, false, true);
+       enableTextField(true);
+       role = null;
+    }//GEN-LAST:event_btnAddActionPerformed
+
+    private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
+        enableButton(false, false, true, false, true);
+        enableTextField(true);
+    }//GEN-LAST:event_btnEditActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAdd;
@@ -275,6 +355,9 @@ public class MasterRolePanel extends javax.swing.JPanel {
                         tableListRole.getSelectedRow());
                 txtKode.setText(role.getKode());
                 txtNama.setText(role.getNama());
+                
+                enableButton(false, true, false, true, true);
+                enableTextField(false);
             }
         }
         
