@@ -4,6 +4,9 @@
  */
 package com.artivisi.training.swing.ui;
 
+import com.artivisi.training.swing.ui.master.panel.MasterRolePanel;
+import javax.swing.JTabbedPane;
+
 /**
  *
  * @author adi
@@ -26,6 +29,10 @@ public class MainFrame extends javax.swing.JFrame {
         mainTabpane.setSelectedComponent(
                 mainTabpane.getComponentAt(
                 getComponentIndexByName(panelName)));
+    }
+
+    public JTabbedPane getMainTabpane() {
+        return mainTabpane;
     }
 
     /**
@@ -105,6 +112,11 @@ public class MainFrame extends javax.swing.JFrame {
         menuMaster.add(menuUser);
 
         menuRole.setText("Role");
+        menuRole.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuRoleActionPerformed(evt);
+            }
+        });
         menuMaster.add(menuRole);
 
         jMenuBar1.add(menuMaster);
@@ -124,6 +136,21 @@ public class MainFrame extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void menuRoleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuRoleActionPerformed
+        MasterRolePanel.getMasterRolePanel()
+                .setName(MasterRolePanel.PANEL_NAME);
+        int indexTab = getComponentIndexByName(MasterRolePanel.PANEL_NAME);
+        if (indexTab == -1) {
+            mainTabpane.addTab(
+                    MasterRolePanel.PANEL_NAME, 
+                    MasterRolePanel.getMasterRolePanel()
+             );
+            setSelectedPanel(MasterRolePanel.PANEL_NAME);
+        } else {
+            mainTabpane.setSelectedIndex(indexTab);
+        }
+    }//GEN-LAST:event_menuRoleActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;

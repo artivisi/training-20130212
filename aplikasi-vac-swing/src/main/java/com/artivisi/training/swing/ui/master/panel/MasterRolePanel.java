@@ -4,12 +4,24 @@
  */
 package com.artivisi.training.swing.ui.master.panel;
 
+import com.artivisi.training.swing.App;
+
 /**
  *
  * @author adi
  */
 public class MasterRolePanel extends javax.swing.JPanel {
 
+    public static final String PANEL_NAME = "Master Role Panel";
+    private static MasterRolePanel masterRolePanel;
+
+    public static MasterRolePanel getMasterRolePanel() {
+        if(masterRolePanel == null){
+            masterRolePanel = new MasterRolePanel();
+        }
+        return masterRolePanel;
+    }
+    
     /**
      * Creates new form MasterUserPanel
      */
@@ -123,6 +135,11 @@ public class MasterRolePanel extends javax.swing.JPanel {
         jScrollPane1.setViewportView(tableListRole);
 
         btnExit.setText("Exit");
+        btnExit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnExitActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -165,6 +182,12 @@ public class MasterRolePanel extends javax.swing.JPanel {
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExitActionPerformed
+        App.getMainFrame().getMainTabpane().remove(this);
+        masterRolePanel = null;
+    }//GEN-LAST:event_btnExitActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAdd;
     private javax.swing.JButton btnDelete;

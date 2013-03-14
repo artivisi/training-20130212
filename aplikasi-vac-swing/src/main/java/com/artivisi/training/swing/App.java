@@ -11,6 +11,14 @@ public class App {
 
     private static VacRestClient vacRestClient;
     private static MainFrame mainFrame;
+
+    public static VacRestClient getVacRestClient() {
+        return vacRestClient;
+    }
+
+    public static MainFrame getMainFrame() {
+        return mainFrame;
+    }
     
     public static void main( String[] args ) {
         
