@@ -14,6 +14,7 @@ import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.TableModel;
 import org.springframework.util.StringUtils;
 
 /**
@@ -384,9 +385,28 @@ public class MasterRolePanel extends javax.swing.JPanel {
                 
                 enableButton(false, true, false, true, true);
                 enableTextField(false);
+                
+                refreshTablePermission(role.getDaftarPermission());
             }
         }
         
+    }
+    
+    private void refreshTablePermission(
+            List<Permission> selectedList){
+        permission = App.getVacRestClient().semuaPermission();
+        
+        for (Permission p1 : selectedList) {
+            for (Permission p : permission) {
+                if(p.getId().equals(p1.getId())){
+                    p.setSelected(Boolean.TRUE);
+                    break;
+                }
+            }
+        }
+        
+        tableListPermission.setModel(
+                new PermissionTableModel(permission));
     }
     
 }

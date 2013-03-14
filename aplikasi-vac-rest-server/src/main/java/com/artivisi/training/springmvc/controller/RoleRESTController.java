@@ -5,6 +5,7 @@
 package com.artivisi.training.springmvc.controller;
 
 import com.artivisi.training.dao.RoleDao;
+import com.artivisi.training.domain.Permission;
 import com.artivisi.training.domain.Role;
 import com.artivisi.training.domain.User;
 import java.net.URI;
@@ -51,7 +52,7 @@ public class RoleRESTController {
         }
         
         for (Role role : hasil) {
-            role.setDaftarPermission(null);
+//            role.setDaftarPermission(null);
             role.setDaftarUser(null);
         }
         return hasil;
