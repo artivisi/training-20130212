@@ -9,12 +9,25 @@ import com.artivisi.training.rest.domain.Role;
 import com.artivisi.training.swing.App;
 import com.artivisi.training.swing.ui.master.tablemodel.MasterRoleTableModel;
 import com.artivisi.training.swing.ui.master.tablemodel.PermissionTableModel;
+import java.awt.Component;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.AbstractButton;
+import javax.swing.JCheckBox;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.SwingConstants;
+import javax.swing.UIManager;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.table.TableModel;
+import javax.swing.table.JTableHeader;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
 import org.springframework.util.StringUtils;
 
 /**
@@ -43,8 +56,17 @@ public class MasterRolePanel extends javax.swing.JPanel {
         initComponents();
         loadDataToTable();
         enableButton(true, false, false, false, true);
+        
         tableListRole.getSelectionModel()
                 .addListSelectionListener(new TableSelection());
+        renderCheckboxHeader();
+    }
+    
+    public void renderCheckboxHeader(){
+        TableColumn tc = tableListPermission.getColumnModel().getColumn(0);  
+        tc.setCellEditor(tableListPermission.getDefaultEditor(Boolean.class));  
+        tc.setCellRenderer(tableListPermission.getDefaultRenderer(Boolean.class));  
+        tc.setHeaderRenderer(new CheckBoxHeader(new MyItemListener()));
     }
     
     private void loadDataToTable(){
@@ -55,6 +77,7 @@ public class MasterRolePanel extends javax.swing.JPanel {
         permission = App.getVacRestClient().semuaPermission();
         tableListPermission.setModel(
                 new PermissionTableModel(permission, Boolean.FALSE));
+        renderCheckboxHeader();
     }
     
     private void enableButton(
@@ -182,19 +205,18 @@ public class MasterRolePanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(txtNama)
-                            .addComponent(txtKode, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 29, Short.MAX_VALUE)))
-                .addContainerGap())
+                            .addComponent(txtKode, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 317, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jPanel1Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jLabel1, jLabel2, jLabel3});
@@ -256,7 +278,7 @@ public class MasterRolePanel extends javax.swing.JPanel {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 291, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 662, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -347,12 +369,14 @@ public class MasterRolePanel extends javax.swing.JPanel {
        
        permission = App.getVacRestClient().semuaPermission();
        tableListPermission.setModel(new PermissionTableModel(permission, Boolean.TRUE));
+       renderCheckboxHeader();
     }//GEN-LAST:event_btnAddActionPerformed
 
     private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
         enableButton(false, false, true, false, true);
         enableTextField(true);
         tableListPermission.setModel(new PermissionTableModel(permission, Boolean.TRUE));
+        renderCheckboxHeader();
     }//GEN-LAST:event_btnEditActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -408,6 +432,96 @@ public class MasterRolePanel extends javax.swing.JPanel {
         
         tableListPermission.setModel(
                 new PermissionTableModel(permission, Boolean.FALSE));
+        renderCheckboxHeader();
     }
+    
+    
+    class CheckBoxHeader extends JCheckBox
+            implements TableCellRenderer, MouseListener {
+
+        protected CheckBoxHeader rendererComponent;
+        protected int column;
+        protected boolean mousePressed = false;
+
+        public CheckBoxHeader(ItemListener itemListener) {
+            rendererComponent = this;
+            rendererComponent.addItemListener(itemListener);
+        }
+
+        public Component getTableCellRendererComponent(
+                JTable table, Object value,
+                boolean isSelected, boolean hasFocus, int row, int column) {
+            if (table != null) {
+                JTableHeader header = table.getTableHeader();
+                if (header != null) {
+                    rendererComponent.setForeground(header.getForeground());
+                    rendererComponent.setBackground(header.getBackground());
+                    rendererComponent.setFont(header.getFont());
+                    rendererComponent.setHorizontalAlignment(SwingConstants.CENTER);
+                    rendererComponent.setHorizontalTextPosition(SwingConstants.CENTER);
+                    header.addMouseListener(rendererComponent);
+                }
+            }
+            setColumn(column);
+            setBorder(UIManager.getBorder("TableHeader.cellBorder"));
+            return rendererComponent;
+        }
+
+        protected void setColumn(int column) {
+            this.column = column;
+        }
+
+        public int getColumn() {
+            return column;
+        }
+
+        protected void handleClickEvent(MouseEvent e) {
+            if (mousePressed) {
+                mousePressed = false;
+                JTableHeader header = (JTableHeader) (e.getSource());
+                JTable tableView = header.getTable();
+                TableColumnModel columnModel = tableView.getColumnModel();
+                int viewColumn = columnModel.getColumnIndexAtX(e.getX());
+                int column = tableView.convertColumnIndexToModel(viewColumn);
+
+                if (viewColumn == this.column && e.getClickCount() == 1 && column != -1) {
+                    doClick();
+                }
+            }
+        }
+
+        public void mouseClicked(MouseEvent e) {
+            handleClickEvent(e);
+            ((JTableHeader) e.getSource()).repaint();
+        }
+
+        public void mousePressed(MouseEvent e) {
+            mousePressed = true;
+        }
+
+        public void mouseReleased(MouseEvent e) {
+        }
+
+        public void mouseEntered(MouseEvent e) {
+        }
+
+        public void mouseExited(MouseEvent e) {
+        }
+    }
+    
+    class MyItemListener implements ItemListener {
+
+        public void itemStateChanged(ItemEvent e) {
+            Object source = e.getSource();
+            if (source instanceof AbstractButton == false) {
+                return;
+            }
+            boolean checked = e.getStateChange() == ItemEvent.SELECTED;
+            for (int x = 0, y = tableListPermission.getRowCount(); x < y; x++) {
+                tableListPermission.setValueAt(new Boolean(checked), x, 0);
+            }
+        }
+    }
+    
     
 }
