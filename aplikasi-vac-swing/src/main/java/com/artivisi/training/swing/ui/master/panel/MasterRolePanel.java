@@ -4,7 +4,10 @@
  */
 package com.artivisi.training.swing.ui.master.panel;
 
+import com.artivisi.training.rest.domain.Role;
 import com.artivisi.training.swing.App;
+import com.artivisi.training.swing.ui.master.tablemodel.MasterRoleTableModel;
+import java.util.List;
 
 /**
  *
@@ -27,6 +30,13 @@ public class MasterRolePanel extends javax.swing.JPanel {
      */
     public MasterRolePanel() {
         initComponents();
+        loadDataToTable();
+    }
+    
+    private void loadDataToTable(){
+        List<Role> roles = App.getVacRestClient().semuaRole();
+        tableListRole.setModel(
+                new MasterRoleTableModel(roles));
     }
 
     /**
