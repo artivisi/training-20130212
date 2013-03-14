@@ -4,9 +4,11 @@
  */
 package com.artivisi.training.swing.ui.master.panel;
 
+import com.artivisi.training.rest.domain.Permission;
 import com.artivisi.training.rest.domain.Role;
 import com.artivisi.training.swing.App;
 import com.artivisi.training.swing.ui.master.tablemodel.MasterRoleTableModel;
+import com.artivisi.training.swing.ui.master.tablemodel.PermissionTableModel;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -24,6 +26,7 @@ public class MasterRolePanel extends javax.swing.JPanel {
     private static MasterRolePanel masterRolePanel;
     private Role role;
     private List<Role> listRole = new ArrayList<Role>();
+    private List<Permission> permission = new ArrayList<Permission>();
 
     public static MasterRolePanel getMasterRolePanel() {
         if(masterRolePanel == null){
@@ -47,6 +50,10 @@ public class MasterRolePanel extends javax.swing.JPanel {
         listRole = App.getVacRestClient().semuaRole();
         tableListRole.setModel(
                 new MasterRoleTableModel(listRole));
+        
+        permission = App.getVacRestClient().semuaPermission();
+        tableListPermission.setModel(
+                new PermissionTableModel(permission));
     }
     
     private void enableButton(
@@ -282,6 +289,7 @@ public class MasterRolePanel extends javax.swing.JPanel {
 
             role.setKode(txtKode.getText());
             role.setNama(txtNama.getText());
+            role.setDaftarPermission(getCheckedPermission());
 
             App.getVacRestClient().simpan(role);
             role = null;
@@ -295,6 +303,21 @@ public class MasterRolePanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_btnSaveActionPerformed
 
+    private List<Permission> getCheckedPermission(){
+        List<Permission> checkedPermissions
+                = new ArrayList<Permission>();
+        
+        for (Permission p : permission) {
+            System.out.println("Checked " + p.getSelected());
+            if(p.getSelected()){
+                checkedPermissions.add(p);
+            }
+        }
+        
+        return checkedPermissions;
+    }
+    
+    
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
         if(role != null){
             int ret = JOptionPane.showConfirmDialog(
@@ -320,6 +343,9 @@ public class MasterRolePanel extends javax.swing.JPanel {
        enableButton(false, false, true, false, true);
        enableTextField(true);
        role = null;
+       
+       permission = App.getVacRestClient().semuaPermission();
+       tableListPermission.setModel(new PermissionTableModel(permission));
     }//GEN-LAST:event_btnAddActionPerformed
 
     private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed

@@ -4,6 +4,8 @@
  */
 package com.artivisi.training.rest.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 
 /**
  *
@@ -13,6 +15,16 @@ public class Permission {
     private Integer id;
     private String action;
     private String keterangan;
+    private transient Boolean selected = Boolean.FALSE;
+
+    @JsonIgnore
+    public Boolean getSelected() {
+        return selected;
+    }
+
+    public void setSelected(Boolean selected) {
+        this.selected = selected;
+    }
 
     public Integer getId() {
         return id;
