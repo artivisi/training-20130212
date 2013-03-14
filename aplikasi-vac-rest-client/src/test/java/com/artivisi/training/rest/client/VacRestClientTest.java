@@ -4,6 +4,7 @@
  */
 package com.artivisi.training.rest.client;
 
+import com.artivisi.training.rest.domain.Permission;
 import com.artivisi.training.rest.domain.Role;
 import java.util.List;
 import org.junit.Test;
@@ -51,10 +52,18 @@ public class VacRestClientTest {
         System.out.println("ID yang diedit : "+hasil.getId());
     }
     
-    @Test
+//    @Test
     public void testHapus(){
         Role r = new Role();
         r.setId(3);
         client.hapus(r);
+    }
+    
+    @Test
+    public void testSemuaPermission(){
+        List<Permission> permissions = client.semuaPermission();
+        for (Permission p : permissions) {
+            System.out.println("Permission " + p.getAction());
+        } 
     }
 }

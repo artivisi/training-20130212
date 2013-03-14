@@ -4,6 +4,7 @@
  */
 package com.artivisi.training.rest.client;
 
+import com.artivisi.training.rest.domain.Permission;
 import com.artivisi.training.rest.domain.Role;
 import java.net.URI;
 import java.util.List;
@@ -18,6 +19,9 @@ import org.springframework.web.client.RestTemplate;
  */
 public class VacRestClient {
     private String serverUrl = "http://localhost:8080/aplikasi-vac-rest-server/rest/role";
+    private String serverUrlPermission = 
+            "http://localhost:8080/aplikasi-vac-rest-server/rest/permission";
+    
     private RestTemplate restTemplate = new RestTemplate();
     
     public List<Role> semuaRole(){
@@ -45,5 +49,14 @@ public class VacRestClient {
             restTemplate.put(serverUrl+"/"+r.getId(), r);
             return r;
         }
+    }
+    
+    public List<Permission> semuaPermission(){
+        ParameterizedTypeReference<List<Permission>> permissions
+                = new ParameterizedTypeReference<List<Permission>>() {};
+        List<Permission> hasil = restTemplate
+                .exchange(serverUrlPermission, HttpMethod.GET, HttpEntity.EMPTY, permissions)
+                .getBody();
+        return hasil;
     }
 }
