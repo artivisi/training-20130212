@@ -29,9 +29,19 @@ public class RoleDao {
         return r;
     }
 
-    public List<Role> cariSemuaRole() {
+    public List<Role> cariSemuaRole(Integer start, Integer rows) {
+        if(start==null) start = 0;
+        if(rows==null) rows = 20;
+        
         return entityManager.createQuery("select r from Role r order by r.nama")
+                .setFirstResult(start)
+                .setMaxResults(rows)
                 .getResultList();
+    }
+    
+    public Long countSemuaRole() {
+        return (Long) entityManager.createQuery("select count(r) from Role r")
+                .getSingleResult();
     }
 
     public void save(Role r) {
@@ -46,9 +56,14 @@ public class RoleDao {
         entityManager.remove(entityManager.find(Role.class, r.getId()));
     }
 
-    public List<Role> cariRoleByNama(String nama) {
+    public List<Role> cariRoleByNama(String nama, Integer start, Integer rows) {
+        if(start==null) start = 0;
+        if(rows==null) rows = 20;
+        
         return entityManager.createQuery("select r from Role r where r.nama like :nama order by r.nama")
                 .setParameter("nama", "%"+nama+"%")
+                .setFirstResult(start)
+                .setMaxResults(rows)
                 .getResultList();
     }
 }

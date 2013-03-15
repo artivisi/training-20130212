@@ -36,19 +36,38 @@ import org.springframework.web.util.UriTemplate;
 @Controller
 public class RoleRESTController {
     private static final String URL_ALL_ROLE = "/role";
+    private static final String URL_ALL_ROLE_COUNT = "/role/count/";
     private static final String URL_ROLE_BY_ID = "/role/{id}";
 
     @Autowired private RoleDao roleDao;
     
+    @RequestMapping(value = URL_ALL_ROLE_COUNT, method = RequestMethod.GET)
+    @ResponseBody
+    public Map<String, Long> countSemuaRole(){
+        Long count = roleDao.countSemuaRole();
+        
+        Map<String, Long> mapCounter = new HashMap<String, Long>();
+        mapCounter.put("total", count);
+        return mapCounter;
+    }
+    
     @RequestMapping(value = URL_ALL_ROLE, method = RequestMethod.GET)
     @ResponseBody
-    public List<Role> semuaRole(@RequestParam(required=false) String nama){
+    public List<Role> semuaRole(
+            @RequestParam(required=false) String nama, 
+            @RequestParam(required=false) Integer start, 
+            @RequestParam(required=false) Integer rows){
         List<Role> hasil ;
         
+        if(start==null || rows==null){
+            start=0;
+            rows=roleDao.countSemuaRole().intValue();
+        }
+        
         if(StringUtils.hasText(nama)) {
-            hasil = roleDao.cariRoleByNama(nama);
+            hasil = roleDao.cariRoleByNama(nama, start, rows);
         } else {
-            hasil = roleDao.cariSemuaRole();
+            hasil = roleDao.cariSemuaRole(start, rows);
         }
         
         for (Role role : hasil) {

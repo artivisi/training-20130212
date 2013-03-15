@@ -8,6 +8,7 @@ import com.artivisi.training.rest.domain.Permission;
 import com.artivisi.training.rest.domain.Role;
 import java.net.URI;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.springframework.core.ParameterizedTypeReference;
@@ -21,18 +22,36 @@ import org.springframework.web.client.RestTemplate;
  */
 public class VacRestClient {
     private String serverUrl = "http://localhost:8080/aplikasi-vac-rest-server/rest/role";
+    private String serverUrlCount = "http://localhost:8080/aplikasi-vac-rest-server/rest/role/count/";
     private String serverUrlPermission = 
             "http://localhost:8080/aplikasi-vac-rest-server/rest/permission";
     
     private RestTemplate restTemplate = new RestTemplate();
     
-    public List<Role> semuaRole(){
+    public List<Role> semuaRole(Integer start, Integer rows){
+        
         ParameterizedTypeReference<List<Role>> roleType
                 = new ParameterizedTypeReference<List<Role>>() {};
+        
+        String urlRole = serverUrl;
+        if(start!=null && rows!=null){
+            urlRole = serverUrl +  "?start=" + start + "&rows=" + rows;
+        }
+        
         List<Role> hasil = restTemplate
-                .exchange(serverUrl, HttpMethod.GET, HttpEntity.EMPTY, roleType)
+                .exchange(urlRole, HttpMethod.GET, HttpEntity.EMPTY, roleType)
                 .getBody();
         return hasil;
+    }
+    
+    public Long countSemuaRole(){
+        ParameterizedTypeReference<Map<String,Long>> mapCount
+                = new ParameterizedTypeReference<Map<String,Long>>() {};
+        
+        Map<String,Long> map = 
+                restTemplate.exchange(serverUrlCount, HttpMethod.GET, HttpEntity.EMPTY, mapCount)
+                .getBody();
+        return map.get("total");
     }
     
     public Role cariRoleById(Integer id){

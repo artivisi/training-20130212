@@ -23,6 +23,7 @@ import javax.swing.AbstractButton;
 import javax.swing.JCheckBox;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
 import javax.swing.SwingWorker;
 import javax.swing.UIManager;
@@ -48,6 +49,7 @@ public class MasterRolePanel extends javax.swing.JPanel
     private List<Permission> permission = new ArrayList<Permission>();
     private WorkerSaveRole workerSaveRole;
     private WorkerQueryRole workerQueryRole;
+    private Integer rows = 5;
     
     public static MasterRolePanel getMasterRolePanel() {
         if(masterRolePanel == null){
@@ -61,6 +63,7 @@ public class MasterRolePanel extends javax.swing.JPanel
      */
     public MasterRolePanel() {
         initComponents();
+        initPaging();
         loadDataToTable();
         enableButton(true, false, false, false, true);
         
@@ -76,8 +79,28 @@ public class MasterRolePanel extends javax.swing.JPanel
         tc.setHeaderRenderer(new CheckBoxHeader(new MyItemListener()));
     }
     
+    private void initPaging(){
+        //start konfigurasi untuk paging
+        Long count = App.getVacRestClient().countSemuaRole();
+        
+        Long hasilBagi = count/rows;
+        long page = Math.round(hasilBagi); 
+        
+        if ((count%rows) > 0) {
+            page = page + 1;
+        }
+        if(page==0){page=1;}
+        labelCount.setText(String.valueOf(count));
+        spinnerPaging.setModel(new SpinnerNumberModel(1, 1, page, 1));
+        labelMaxPage.setText("  pages : " + String.valueOf(page));
+        //end konfigurasi untuk paging
+    }
+    
     private void loadDataToTable(){
-        listRole = App.getVacRestClient().semuaRole();
+        Double hal = (Double) spinnerPaging.getModel().getValue();
+        Integer start = (hal.intValue() - 1) * rows;
+        
+        listRole = App.getVacRestClient().semuaRole(start, rows);
         tableListRole.setModel(
                 new MasterRoleTableModel(listRole));
         
@@ -149,6 +172,11 @@ public class MasterRolePanel extends javax.swing.JPanel
         tableListRole = new javax.swing.JTable();
         btnExit = new javax.swing.JButton();
         btnRefresh = new javax.swing.JButton();
+        jToolBar1 = new javax.swing.JToolBar();
+        jLabel4 = new javax.swing.JLabel();
+        labelCount = new javax.swing.JLabel();
+        spinnerPaging = new javax.swing.JSpinner();
+        labelMaxPage = new javax.swing.JLabel();
 
         btnAdd.setText("Add");
         btnAdd.setEnabled(false);
@@ -202,6 +230,7 @@ public class MasterRolePanel extends javax.swing.JPanel
                 "x", "Permission"
             }
         ));
+        tableListPermission.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
         tableListPermission.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jScrollPane2.setViewportView(tableListPermission);
 
@@ -255,6 +284,7 @@ public class MasterRolePanel extends javax.swing.JPanel
                 "Kode", "Nama"
             }
         ));
+        tableListRole.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
         jScrollPane1.setViewportView(tableListRole);
 
         btnExit.setText("Exit");
@@ -271,6 +301,26 @@ public class MasterRolePanel extends javax.swing.JPanel
                 btnRefreshActionPerformed(evt);
             }
         });
+
+        jToolBar1.setRollover(true);
+
+        jLabel4.setText("Total Data : ");
+        jToolBar1.add(jLabel4);
+
+        labelCount.setMaximumSize(new java.awt.Dimension(14, 14));
+        labelCount.setPreferredSize(new java.awt.Dimension(50, 50));
+        jToolBar1.add(labelCount);
+
+        spinnerPaging.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                spinnerPagingStateChanged(evt);
+            }
+        });
+        jToolBar1.add(spinnerPaging);
+
+        labelMaxPage.setMaximumSize(new java.awt.Dimension(14, 14));
+        labelMaxPage.setPreferredSize(new java.awt.Dimension(100, 100));
+        jToolBar1.add(labelMaxPage);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -295,7 +345,9 @@ public class MasterRolePanel extends javax.swing.JPanel
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 332, Short.MAX_VALUE))))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 332, Short.MAX_VALUE)
+                            .addComponent(jToolBar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -309,10 +361,13 @@ public class MasterRolePanel extends javax.swing.JPanel
                     .addComponent(btnExit)
                     .addComponent(btnRefresh))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -406,6 +461,10 @@ public class MasterRolePanel extends javax.swing.JPanel
         App.getMainFrame().getjProgressBar1().setIndeterminate(true);
     }//GEN-LAST:event_btnRefreshActionPerformed
 
+    private void spinnerPagingStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_spinnerPagingStateChanged
+        loadDataToTable();
+    }//GEN-LAST:event_spinnerPagingStateChanged
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAdd;
     private javax.swing.JButton btnDelete;
@@ -416,9 +475,14 @@ public class MasterRolePanel extends javax.swing.JPanel
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JToolBar jToolBar1;
+    private javax.swing.JLabel labelCount;
+    private javax.swing.JLabel labelMaxPage;
+    private javax.swing.JSpinner spinnerPaging;
     private javax.swing.JTable tableListPermission;
     private javax.swing.JTable tableListRole;
     private javax.swing.JTextField txtKode;
@@ -432,7 +496,10 @@ public class MasterRolePanel extends javax.swing.JPanel
             int progress = 0;
             //Initialize progress property.
             setProgress(0);
-            List<Role> roles = App.getVacRestClient().semuaRole();
+            
+            Double hal = (Double) spinnerPaging.getModel().getValue();
+            Integer start = (hal.intValue() - 1) * rows;
+            List<Role> roles = App.getVacRestClient().semuaRole(start, rows);
             
             //Sleep for at least one second to simulate "startup".
             try {

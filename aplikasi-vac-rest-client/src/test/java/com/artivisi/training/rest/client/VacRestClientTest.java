@@ -20,7 +20,7 @@ public class VacRestClientTest {
     
 //    @Test
     public void testSemuaRole() {
-        List<Role> hasil = client.semuaRole();
+        List<Role> hasil = client.semuaRole(0,19);
         System.out.println("Jumlah record : "+hasil.size());
         for (Role role : hasil) {
             System.out.println("Kode : "+role.getKode());
