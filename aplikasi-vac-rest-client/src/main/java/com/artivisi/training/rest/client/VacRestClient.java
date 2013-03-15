@@ -44,8 +44,8 @@ public class VacRestClient {
     }
     
     public Role simpan(Role r){
-//        try {
-//            Thread.sleep(10000);
+        try {
+            Thread.sleep(10000);
             
             if(r.getId() == null){
                 URI location = restTemplate.postForLocation(serverUrl, r);
@@ -54,10 +54,10 @@ public class VacRestClient {
                 restTemplate.put(serverUrl+"/"+r.getId(), r);
                 return r;
             }
-//        } catch (InterruptedException ex) {
-//            Logger.getLogger(VacRestClient.class.getName()).log(Level.SEVERE, null, ex);
-//            return null;
-//        }
+        } catch (InterruptedException ex) {
+            Logger.getLogger(VacRestClient.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
     }
     
     public List<Permission> semuaPermission(){

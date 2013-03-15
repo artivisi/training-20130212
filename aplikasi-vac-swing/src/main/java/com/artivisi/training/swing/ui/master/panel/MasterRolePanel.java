@@ -14,8 +14,11 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import javax.swing.AbstractButton;
 import javax.swing.JCheckBox;
 import javax.swing.JOptionPane;
@@ -35,7 +38,8 @@ import org.springframework.util.StringUtils;
  *
  * @author adi
  */
-public class MasterRolePanel extends javax.swing.JPanel {
+public class MasterRolePanel extends javax.swing.JPanel 
+    implements PropertyChangeListener {
 
     public static final String PANEL_NAME = "Master Role Panel";
     private static MasterRolePanel masterRolePanel;
@@ -311,7 +315,9 @@ public class MasterRolePanel extends javax.swing.JPanel {
         }
         
         workerSaveRole = new WorkerSaveRole();
+        workerSaveRole.addPropertyChangeListener(this);
         workerSaveRole.execute();
+        
         btnSave.setEnabled(false);
         App.getMainFrame().getjProgressBar1().setIndeterminate(true);
     }//GEN-LAST:event_btnSaveActionPerformed
@@ -360,6 +366,8 @@ public class MasterRolePanel extends javax.swing.JPanel {
        permission = App.getVacRestClient().semuaPermission();
        tableListPermission.setModel(new PermissionTableModel(permission, Boolean.TRUE));
        renderCheckboxHeader();
+       
+       txtKode.requestFocus();
     }//GEN-LAST:event_btnAddActionPerformed
 
     private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
@@ -386,6 +394,15 @@ public class MasterRolePanel extends javax.swing.JPanel {
     private javax.swing.JTextField txtKode;
     private javax.swing.JTextField txtNama;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        if("progress" == evt.getPropertyName()){
+            int progress = (Integer) evt.getNewValue();
+            App.getMainFrame().getjProgressBar1().setIndeterminate(false);
+            App.getMainFrame().getjProgressBar1().setValue(progress);
+        }
+    }
 
     private class TableSelection 
         implements ListSelectionListener{

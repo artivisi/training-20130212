@@ -66,6 +66,8 @@ public class MainFrame extends javax.swing.JFrame {
 
         jLabel1.setText("User : ");
 
+        jProgressBar1.setStringPainted(true);
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
