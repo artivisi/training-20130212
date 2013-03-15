@@ -47,6 +47,7 @@ public class MasterRolePanel extends javax.swing.JPanel
     private List<Role> listRole = new ArrayList<Role>();
     private List<Permission> permission = new ArrayList<Permission>();
     private WorkerSaveRole workerSaveRole;
+    private WorkerQueryRole workerQueryRole;
     
     public static MasterRolePanel getMasterRolePanel() {
         if(masterRolePanel == null){
@@ -147,6 +148,7 @@ public class MasterRolePanel extends javax.swing.JPanel
         jScrollPane1 = new javax.swing.JScrollPane();
         tableListRole = new javax.swing.JTable();
         btnExit = new javax.swing.JButton();
+        btnRefresh = new javax.swing.JButton();
 
         btnAdd.setText("Add");
         btnAdd.setEnabled(false);
@@ -263,6 +265,13 @@ public class MasterRolePanel extends javax.swing.JPanel
             }
         });
 
+        btnRefresh.setText("Refresh");
+        btnRefresh.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRefreshActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -279,7 +288,10 @@ public class MasterRolePanel extends javax.swing.JPanel
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnSave)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnExit))
+                        .addComponent(btnExit)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnRefresh)
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -294,7 +306,8 @@ public class MasterRolePanel extends javax.swing.JPanel
                     .addComponent(btnEdit)
                     .addComponent(btnDelete)
                     .addComponent(btnSave)
-                    .addComponent(btnExit))
+                    .addComponent(btnExit)
+                    .addComponent(btnRefresh))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
@@ -377,11 +390,28 @@ public class MasterRolePanel extends javax.swing.JPanel
         renderCheckboxHeader();
     }//GEN-LAST:event_btnEditActionPerformed
 
+    private void btnRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshActionPerformed
+        tableListRole.setModel(new MasterRoleTableModel(new ArrayList<Role>()));
+        
+        if(workerQueryRole != null && !workerQueryRole.isDone()){
+            workerQueryRole.cancel(true);
+            workerQueryRole = null;
+        }
+        
+        workerQueryRole = new WorkerQueryRole();
+        workerQueryRole.addPropertyChangeListener(this);
+        workerQueryRole.execute();
+        
+        btnRefresh.setEnabled(false);
+        App.getMainFrame().getjProgressBar1().setIndeterminate(true);
+    }//GEN-LAST:event_btnRefreshActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAdd;
     private javax.swing.JButton btnDelete;
     private javax.swing.JButton btnEdit;
     private javax.swing.JButton btnExit;
+    private javax.swing.JButton btnRefresh;
     private javax.swing.JButton btnSave;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -395,8 +425,55 @@ public class MasterRolePanel extends javax.swing.JPanel
     private javax.swing.JTextField txtNama;
     // End of variables declaration//GEN-END:variables
 
+    class WorkerQueryRole extends SwingWorker<Void, Void> {
+        @Override
+        public Void doInBackground() {
+//            Random random = new Random();
+            int progress = 0;
+            //Initialize progress property.
+            setProgress(0);
+            List<Role> roles = App.getVacRestClient().semuaRole();
+            
+            //Sleep for at least one second to simulate "startup".
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException ignore) {
+                System.out.println("ERROR " + ignore.getMessage());
+            }
+            
+            int i = 0;
+            
+            while(i<roles.size()){
+                System.out.println("Perulangan Role " + roles.get(i).getKode());
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException ignore) {
+                    System.out.println("ERROR " + ignore.getMessage());
+                }
+                
+                Integer counter = ((i+1) * 100) / roles.size();
+                
+                progress = counter;
+                setProgress(Math.min(progress, 100));
+                tableListRole.setModel(new MasterRoleTableModel(roles.subList(0, 0+i)));
+                i++;
+            }
+            
+            return null;
+        }
+
+        /*
+         * Executed in event dispatch thread
+         */
+        public void done() {
+            btnRefresh.setEnabled(true);
+        }
+
+    }
+    
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
+        System.out.println("propertyChange : " + evt.getPropertyName());
         if("progress" == evt.getPropertyName()){
             int progress = (Integer) evt.getNewValue();
             App.getMainFrame().getjProgressBar1().setIndeterminate(false);
