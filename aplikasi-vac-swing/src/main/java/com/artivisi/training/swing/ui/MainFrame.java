@@ -5,6 +5,7 @@
 package com.artivisi.training.swing.ui;
 
 import com.artivisi.training.swing.ui.master.panel.MasterRolePanel;
+import javax.swing.JProgressBar;
 import javax.swing.JTabbedPane;
 
 /**
@@ -33,6 +34,10 @@ public class MainFrame extends javax.swing.JFrame {
 
     public JTabbedPane getMainTabpane() {
         return mainTabpane;
+    }
+
+    public JProgressBar getjProgressBar1() {
+        return jProgressBar1;
     }
 
     /**

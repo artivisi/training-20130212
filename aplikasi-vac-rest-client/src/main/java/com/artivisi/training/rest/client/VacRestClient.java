@@ -8,6 +8,8 @@ import com.artivisi.training.rest.domain.Permission;
 import com.artivisi.training.rest.domain.Role;
 import java.net.URI;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -42,13 +44,20 @@ public class VacRestClient {
     }
     
     public Role simpan(Role r){
-        if(r.getId() == null){
-            URI location = restTemplate.postForLocation(serverUrl, r);
-            return restTemplate.getForObject(location, Role.class);
-        } else {
-            restTemplate.put(serverUrl+"/"+r.getId(), r);
-            return r;
-        }
+//        try {
+//            Thread.sleep(10000);
+            
+            if(r.getId() == null){
+                URI location = restTemplate.postForLocation(serverUrl, r);
+                return restTemplate.getForObject(location, Role.class);
+            } else {
+                restTemplate.put(serverUrl+"/"+r.getId(), r);
+                return r;
+            }
+//        } catch (InterruptedException ex) {
+//            Logger.getLogger(VacRestClient.class.getName()).log(Level.SEVERE, null, ex);
+//            return null;
+//        }
     }
     
     public List<Permission> semuaPermission(){

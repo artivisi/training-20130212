@@ -21,6 +21,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
+import javax.swing.SwingWorker;
 import javax.swing.UIManager;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -41,7 +42,8 @@ public class MasterRolePanel extends javax.swing.JPanel {
     private Role role;
     private List<Role> listRole = new ArrayList<Role>();
     private List<Permission> permission = new ArrayList<Permission>();
-
+    private WorkerSaveRole workerSaveRole;
+    
     public static MasterRolePanel getMasterRolePanel() {
         if(masterRolePanel == null){
             masterRolePanel = new MasterRolePanel();
@@ -215,8 +217,8 @@ public class MasterRolePanel extends javax.swing.JPanel {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 317, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 228, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
         );
 
         jPanel1Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jLabel1, jLabel2, jLabel3});
@@ -273,13 +275,11 @@ public class MasterRolePanel extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnSave)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnExit)
-                        .addGap(0, 0, Short.MAX_VALUE))
+                        .addComponent(btnExit))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 662, Short.MAX_VALUE)))
-                .addContainerGap())
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 332, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -305,25 +305,15 @@ public class MasterRolePanel extends javax.swing.JPanel {
     }//GEN-LAST:event_btnExitActionPerformed
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
-        if(validateForm()){
-            if(role == null){
-                role = new Role();
-            }
-
-            role.setKode(txtKode.getText());
-            role.setNama(txtNama.getText());
-            role.setDaftarPermission(getCheckedPermission());
-
-            App.getVacRestClient().simpan(role);
-            role = null;
-            loadDataToTable();
-
-            txtKode.setText("");
-            txtNama.setText("");
-
-            enableButton(true, false, false, false, true);
-            enableTextField(false);
+        if(workerSaveRole != null && !workerSaveRole.isDone()){
+            workerSaveRole.cancel(true);
+            workerSaveRole = null;
         }
+        
+        workerSaveRole = new WorkerSaveRole();
+        workerSaveRole.execute();
+        btnSave.setEnabled(false);
+        App.getMainFrame().getjProgressBar1().setIndeterminate(true);
     }//GEN-LAST:event_btnSaveActionPerformed
 
     private List<Permission> getCheckedPermission(){
@@ -521,6 +511,39 @@ public class MasterRolePanel extends javax.swing.JPanel {
                 tableListPermission.setValueAt(new Boolean(checked), x, 0);
             }
         }
+    }
+    
+    class WorkerSaveRole extends SwingWorker<Role, Void> {
+
+        @Override
+        protected void done() {
+            role = null;
+            loadDataToTable();
+
+            txtKode.setText("");
+            txtNama.setText("");
+
+            enableButton(true, false, false, false, true);
+            enableTextField(false);
+            App.getMainFrame().getjProgressBar1().setIndeterminate(false);
+        }
+        
+        @Override
+        protected Role doInBackground() throws Exception {
+            if(validateForm()){
+                if(role == null){
+                    role = new Role();
+                }
+
+                role.setKode(txtKode.getText());
+                role.setNama(txtNama.getText());
+                role.setDaftarPermission(getCheckedPermission());
+
+                App.getVacRestClient().simpan(role);
+            }
+            return role;
+        }
+        
     }
     
     
